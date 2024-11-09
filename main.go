@@ -83,7 +83,7 @@ func main() {
 func createContainer() (*task.Docker, *task.DockerResult) {
 	c := task.Config{
 		Name: "test-container-1",
-		Image: "postgers",
+		Image: "postgres",
 		Env: []string{
 			"POSTGRES_USER=cube",
 			"POSTGRES_PASSWORD=secret",
