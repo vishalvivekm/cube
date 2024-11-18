@@ -86,7 +86,6 @@ func NewDocker (c *Config) *Docker {
 	return &Docker{
 		Client: dc,
 		Config: *c,
-
 	}
 }
 
