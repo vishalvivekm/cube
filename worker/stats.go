@@ -1,6 +1,8 @@
 package worker
 
 import (
+	"log"
+
 	"github.com/c9s/goprocinfo/linux"
 )
 
@@ -76,4 +78,50 @@ func (s *Stats) CpuUsage() float64{
 	// total cpu usage = (total - idle) / total
 	// https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
 	return (float64(total) - float64(idle)) / float64(total)
+}
+
+func GetStats() *Stats {
+	return &Stats{
+		MemStats: GetMemoryInfo(),
+		DiskStats: GetDiskInfo(),
+		CpuStats: GetCpuStats(),
+		LoadStats: GetLoadAvg(),
+	}
+}
+
+func GetMemoryInfo() *linux.MemInfo {
+	memstats, err := linux.ReadMemInfo("/proc/meminfo")
+	if err != nil {
+		log.Printf("error reading /proc/meminfo")
+		return &linux.MemInfo{}
+	}
+	return memstats
+}
+// https://godoc.org/github.com/c9s/goprocinfo/linux#Disk
+func GetDiskInfo() *linux.Disk {
+	diskstats, err := linux.ReadDisk("/")
+	if err != nil {
+		log.Printf("error reading from /")
+		return &linux.Disk{}
+	}
+	return diskstats
+}
+// https://godoc.org/github.com/c9s/goprocinfo/linux#CPUStat
+func GetCpuStats() *linux.CPUStat {
+	stats, err := linux.ReadStat("/proc/stat")
+	if err != nil {
+		log.Printf("error reading form /proc/stat")
+		return &linux.CPUStat{}
+	}
+	return &stats.CPUStatAll
+}
+//https://godoc.org/github.com/c9s/goprocinfo/linux#LoadAvg
+func LoadAvg() *linux.LoadAvg {
+	loadavg, err := linux.ReadLoadAvg("/proc/loadavg")
+	if err != nil {
+		log.Printf("error reading form /proc/loadavg")
+		return &linux.LoadAvg{}
+	}
+
+	return loadavg
 }
