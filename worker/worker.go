@@ -29,6 +29,7 @@ type Worker struct {
 		return task.DockerResult{Error: nil}
 	}
 	taskQueued := t.(task.Task)
+	fmt.Printf("found task in queue: %v:\n", taskQueued)
 	taskPersisted := w.Db[taskQueued.ID]
 	if taskPersisted == nil { // first time seeing this task :)
 		// persist it in the db
@@ -75,7 +76,7 @@ type Worker struct {
 		return res
 		
 	}
-
+	
 	func (w *Worker) StopTask(t task.Task) task.DockerResult {
 		config := task.NewConfig(&t)
 		d := task.NewDocker(config)
@@ -94,6 +95,16 @@ type Worker struct {
 	return res
 
 	}
+	// Add task to the queue
 	func (w *Worker) AddTask(t task.Task) {
 		w.Queue.Enqueue(t)
+	}
+
+	// return all the tasks in worker's db
+	func (w *Worker) GetTasks() []*task.Task {
+	tasks := make([]*task.Task, 0)
+	for _, task := range w.Db {
+		tasks = append(tasks, task)
+	}	
+	return tasks
 	}
