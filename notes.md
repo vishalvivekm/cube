@@ -19,3 +19,8 @@ https://refactoring.guru/
 - Linux `/proc` filesystem: a pseudo filesystem containing info about system cpu, memory and disk resources.
    https://www.kernel.org/doc/html/latest/filesystems/proc.html#chapter-1-collecting-system-information
    https://tldp.org/LDP/sag/html/proc-fs.html
+
+
+Accurate calculation of CPU usage given in percentage in Linux
+- https://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
+
