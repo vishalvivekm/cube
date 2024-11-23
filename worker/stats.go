@@ -11,6 +11,7 @@ type Stats struct {
 	DiskStats *linux.Disk
 	CpuStats *linux.CPUStat
 	LoadStats *linux.LoadAvg
+	TaskCount int
 }
 func (s *Stats) MemTotalKb() uint64 {
 	return s.MemStats.MemTotal
@@ -116,7 +117,7 @@ func GetCpuStats() *linux.CPUStat {
 	return &stats.CPUStatAll
 }
 //https://godoc.org/github.com/c9s/goprocinfo/linux#LoadAvg
-func LoadAvg() *linux.LoadAvg {
+func GetLoadAvg() *linux.LoadAvg {
 	loadavg, err := linux.ReadLoadAvg("/proc/loadavg")
 	if err != nil {
 		log.Printf("error reading form /proc/loadavg")
