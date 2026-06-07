@@ -101,7 +101,7 @@ func (m *Manager) SendWork() {
     if err != nil {
         log.Printf("Unable to marshal task object: %v.\n", t)
     }
-    url := fmt.Sprintf("http:///%s/tasks", w)
+    url := fmt.Sprintf("http://%s/tasks", w)
     resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
     if err != nil {
         log.Printf("Error connecting to %v: %v\n", w, err)
@@ -127,4 +127,27 @@ func (m *Manager) SendWork() {
  } else {
     log.Println("No work in the queue")
  }
+}
+
+func(m *Manager) AddTask(te task.TaskEvent){
+    m.Pending.Enqueue(te)
+}
+
+func New(workers []string) *Manager{
+    taskDb := make(map[uuid.UUID]*task.Task)
+    eventDb := make(map[uuid.UUID]*task.TaskEvent)
+    workerTaskMap := make(map[string][]uuid.UUID)
+    taskWorkerMap := make(map[uuid.UUID]string)
+
+    for _, worker := range workers {
+        workerTaskMap[worker] = []uuid.UUID{}
+    }
+    return &Manager{
+        Pending: *queue.New(), 
+        Workers: workers, 
+        TaskDb: taskDb,
+        EventDb: eventDb,
+        WorkerTaskMap: workerTaskMap,
+        TaskWorkerMap: taskWorkerMap,
+    }
 }
