@@ -28,7 +28,7 @@ type Worker struct {
 			time.Sleep(20 * time.Second)
 		}
 	}
-	func (w *Worker) RunTask() task.DockerResult {
+	func (w *Worker) runTask() task.DockerResult {
 	t := w.Queue.Dequeue()
 	if t == nil {
 		log.Println("no tasks in the queue")
@@ -114,3 +114,18 @@ type Worker struct {
 	}	
 	return tasks
 	}
+func (w *Worker) RunTasks() {
+	for {
+		if w.Queue.Len() != 0 {
+			res := w.runTask()
+			if res.Error != nil {
+				log.Printf("error running task: %v\n", res.Error)
+			}
+		} else {
+				log.Printf("no tasks to process currently. \n")
+		}
+		log.Println("sleeping for 10 seconds")
+		time.Sleep(10 * time.Second)
+
+	}
+}
