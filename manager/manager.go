@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/vishalvivekm/cube/task"
 	"github.com/vishalvivekm/cube/worker"
@@ -39,7 +40,7 @@ func (m *Manager) SelectWorker()  string{
     return m.Workers[newWorker]
 }
  
-func (m *Manager) UpdateTasks() {
+func (m *Manager) updateTasks() {
     // fmt.Println("I will update tasks")
     for _, worker := range m.Workers{
         log.Printf("checking worker %v for task updates ", worker)
@@ -76,7 +77,15 @@ func (m *Manager) UpdateTasks() {
 
     }
 }
- 
+func(m *Manager) UpdateTasks(){
+for {
+    m.updateTasks()
+    log.Println("Task updates completed")
+    log.Println("Sleeping for 15 seconds")
+    time.Sleep(15 * time.Second)
+}
+}
+
 func (m *Manager) SendWork() {
     if m.Pending.Len() > 0 {
 
@@ -149,5 +158,14 @@ func New(workers []string) *Manager{
         EventDb: eventDb,
         WorkerTaskMap: workerTaskMap,
         TaskWorkerMap: taskWorkerMap,
+    }
+}
+
+func(m *Manager) ProcessTasks(){
+    for {
+        log.Println("Processing any tasks in the queue")
+        m.SendWork()
+        log.Println("Sleeping for 10 seconds")
+        time.Sleep(10 * time.Second)
     }
 }

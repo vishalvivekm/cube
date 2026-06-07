@@ -1,0 +1,10 @@
+{
+    "ID": "c2e91ed1-3bce-4d85-a80d-6805d3bd899d",
+    "State": 2,
+    "Task": {
+        "State": 1,
+        "ID": "90c6e5e4-8027-43c1-a24e-4b292c615633",
+        "Name": "test-task-v1",
+        "Image": "vishalvivekm/to-do-app:latest"
+    }
+}
